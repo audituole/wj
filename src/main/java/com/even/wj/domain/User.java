@@ -1,26 +1,32 @@
 package com.even.wj.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import javax.persistence.*;
+
 /**
  * 用户实体类
  */
+@Entity//表示这是一个实体类,实体类的注入
+@Table(name = "user") //表示对应的表名是 user
+//因为是做前后端分离，而前后端数据交互用的是 json 格式。
+// 那么 User 对象就会被转换为 json 数据。
+// 而本项目使用 jpa 来做实体类的持久化，jpa 默认会使用 hibernate,
+// 在 jpa 工作过程中，就会创造代理类来继承 User ，
+// 并添加 handler 和 hibernateLazyInitializer 这两个无须 json 化的属性，
+// 所以这里需要用 JsonIgnoreProperties 把这两个属性忽略掉。
+@JsonIgnoreProperties({"handler","hibernateLazyInitializer"})
 public class User {
 
     //用户id
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
     //用户名
     private String username;
     //密码
     private String password;
-    //用户姓名
-    private String name;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
 
     public int getId() {
         return id;

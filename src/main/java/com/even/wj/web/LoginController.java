@@ -3,9 +3,12 @@ package com.even.wj.web;
 
 import com.even.wj.domain.User;
 import com.even.wj.result.Result;
+import com.even.wj.service.UserService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,12 +19,13 @@ import java.util.Objects;
 
 
 
-@Component
+@Controller
 public class LoginController {
 
     private Logger logger = LoggerFactory.getLogger(this.getClass());
 
-
+    @Autowired
+    private UserService userService;
 
     @CrossOrigin
     @PostMapping("api/login")
@@ -32,12 +36,12 @@ public class LoginController {
         String usrName = requestUser.getUsername();
         usrName = HtmlUtils.htmlEscape(usrName);
 
-        if(!Objects.equals("admin",usrName) ||Objects.equals("123456",requestUser.getPassword())){
-            logger.info("用户名密码错误");
+        User user = userService.get(usrName,requestUser.getPassword());
+        if(user!= null) {
+            return new Result(200);
+        }else {
             return new Result(400);
         }
-
-        return new Result(200);
 
     }
 }
