@@ -11,6 +11,7 @@ import java.util.List;
  * 图书馆控制器
  */
 @RestController
+@CrossOrigin
 public class LibraryController {
 
     @Autowired
@@ -23,7 +24,8 @@ public class LibraryController {
      */
     @GetMapping("/api/books")
     public List<Book> list() {
-        return bookService.list();
+        List<Book> list = bookService.list();
+        return list;
     }
 
     /**
@@ -32,7 +34,7 @@ public class LibraryController {
      * @param book
      * @return
      */
-    @PostMapping("/api/books")
+    @PostMapping("/api/addBooks")
     public Book addOrUpdate(@RequestBody Book book) {
         bookService.addOrUpdate(book);
         return book;
